@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[dev]
+
+      - name: Lint and format check (Ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type checking (mypy)
+        run: |
+          mypy card_vision tests
+
+      - name: Run unit test suite & coverage (pytest)
+        run: |
+          pytest --cov=card_vision --cov-report=xml --cov-report=term-missing
+
+      - name: Verify synthetic data generator execution
+        run: |
+          python tools/generate_synthetic_cards.py --count 3 --output-dir /tmp/test_synthetic
+          test -f /tmp/test_synthetic/images/card_synth_000000.jpg
+          test -f /tmp/test_synthetic/labels/card_synth_000000.txt
