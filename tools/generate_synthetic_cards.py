@@ -87,10 +87,14 @@ def generate_random_expiry() -> str:
 @functools.lru_cache(maxsize=32)
 def get_font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
     """Get cached standard PIL font or fallback."""
+    bundled_font = (
+        Path(__file__).resolve().parent.parent / "card_vision" / "fonts" / "DejaVuSansMono.ttf"
+    )
     font_candidates = [
+        str(bundled_font),
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
         "/System/Library/Fonts/Monaco.ttf",
         "/System/Library/Fonts/Courier.dfont",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
         "DejaVuSansMono.ttf",
         "Courier",
     ]
@@ -182,8 +186,8 @@ def draw_card_details(
     draw.text((px, py), formatted_pan, font=font_pan, fill=text_color)
 
     # 3. Expiry Date
-    ex, ey = 380, 370
-    draw.text((ex - 90, ey + 4), "VALID\nTHRU", font=font_small, fill=(180, 180, 180))
+    ex, ey = 400, 365
+    draw.text((ex - 120, ey + 4), "VALID\nTHRU", font=font_small, fill=(180, 180, 180))
     draw.text((ex + 2, ey + 2), expiry, font=font_med, fill=shadow_color)
     draw.text((ex, ey), expiry, font=font_med, fill=text_color)
 

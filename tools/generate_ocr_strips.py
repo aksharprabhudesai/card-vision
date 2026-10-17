@@ -47,11 +47,15 @@ SAMPLE_FIRSTNAMES = [
 
 def get_ocr_font(size: int = 36) -> ImageFont.ImageFont:
     """Attempt to load standard monospaced fonts resembling Farrington 7B or OCR-A."""
+    bundled_font = (
+        Path(__file__).resolve().parent.parent / "card_vision" / "fonts" / "DejaVuSansMono.ttf"
+    )
     candidates = [
+        str(bundled_font),
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
         "/System/Library/Fonts/Monaco.ttf",
         "/System/Library/Fonts/Courier.dfont",
         "/System/Library/Fonts/Menlo.ttc",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
         "DejaVuSansMono.ttf",
     ]
     for p in candidates:

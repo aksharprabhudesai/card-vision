@@ -556,6 +556,10 @@ def main() -> None:
     parser.add_argument(
         "--num-cards", type=int, default=550, help="Number of synthetic cards to generate"
     )
+    parser.add_argument(
+        "--skip-detector", action="store_true", help="Skip training the card detector"
+    )
+    parser.add_argument("--skip-ocr", action="store_true", help="Skip training the OCR model")
     args = parser.parse_args()
 
     random.seed(42)
@@ -564,8 +568,10 @@ def main() -> None:
 
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     det_dataset, ocr_samples = build_training_datasets(num_cards=args.num_cards)
-    train_detector(det_dataset, device=device, epochs=args.detector_epochs)
-    train_ocr(ocr_samples, device=device, epochs=args.ocr_epochs)
+    if not args.skip_detector:
+        train_detector(det_dataset, device=device, epochs=args.detector_epochs)
+    if not args.skip_ocr:
+        train_ocr(ocr_samples, device=device, epochs=args.ocr_epochs)
     evaluate_end_to_end(num_test_cards=25)
 
 

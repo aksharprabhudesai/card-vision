@@ -202,9 +202,9 @@ def get_standard_rois(
     pan_y1, pan_y2 = int(0.42 * h), int(0.65 * h)
     pan_x1, pan_x2 = int(0.05 * w), int(0.95 * w)
 
-    # Expiry Region: y from 62% to 78%, x from 35% to 75%
+    # Expiry Region: y from 62% to 78%, x from 42% to 75%
     exp_y1, exp_y2 = int(0.62 * h), int(0.78 * h)
-    exp_x1, exp_x2 = int(0.35 * w), int(0.75 * w)
+    exp_x1, exp_x2 = int(0.42 * w), int(0.75 * w)
 
     # Name Region: y from 75% to 92%, x from 5% to 75%
     name_y1, name_y2 = int(0.75 * h), int(0.92 * h)

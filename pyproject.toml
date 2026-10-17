@@ -56,6 +56,7 @@ card-vision = "card_vision.cli:main"
 [tool.hatch.build]
 artifacts = [
     "card_vision/weights/*.onnx",
+    "card_vision/fonts/*.ttf",
 ]
 
 [tool.hatch.build.targets.wheel]
