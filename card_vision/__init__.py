@@ -15,6 +15,7 @@ from card_vision.preprocessor import (
     warp_perspective_id1,
 )
 from card_vision.scanner import CardScanner
+from card_vision.stream import StreamCardScanner, StreamState
 from card_vision.validator import (
     clean_pan_digits,
     format_pan,
@@ -24,9 +25,11 @@ from card_vision.validator import (
     validate_luhn,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = [
     "CardScanner",
+    "StreamCardScanner",
+    "StreamState",
     "CardResult",
     "BoundingBox",
     "Point2D",

@@ -89,12 +89,73 @@ if result:
     print(f"Confidence:  {result.confidence:.2f}")
 ```
 
-### CLI Inspection
+### CLI Commands
 
 ```bash
+# Scan a single card image (privacy-masked by default)
 card-vision scan --image sample.jpg --mask
+
+# Scan with full unmasked PAN and structured JSON output
 card-vision scan --image sample.jpg --no-mask --json
+
+# Scan from live camera feed with real-time HUD and temporal consensus voting
+card-vision stream --source 0
+
+# Start REST API microservice (requires card-vision[server])
+card-vision serve --host 0.0.0.0 --port 8000
 ```
+
+---
+
+## 📹 Live Stream & Camera Scanning
+
+For video feeds or mobile/desktop webcams, `StreamCardScanner` stabilizes corner jitter via Exponential Moving Average (EMA) and performs sliding-window consensus voting across successive frames to eliminate glare and motion blur:
+
+```python
+import cv2
+from card_vision import StreamCardScanner
+
+cap = cv2.VideoCapture(0)
+stream_scanner = StreamCardScanner(history_size=5, min_consistent_frames=3)
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    result, is_stable = stream_scanner.process_frame(frame, mask_pan_flag=True)
+    if is_stable and result:
+        print(f"Verified Card: {result.masked_pan} ({result.network.value})")
+        break
+```
+
+---
+
+## 🐳 Docker & REST Microservice
+
+Deploy as an isolated, containerized microservice:
+
+```bash
+# Build and run with Docker Compose
+docker compose up -d
+
+# Check service health
+curl http://localhost:8000/health
+
+# Scan an uploaded card image
+curl -X POST http://localhost:8000/v1/scan \
+     -F "file=@sample_card.jpg" \
+     -F "mask_pan=true"
+```
+
+---
+
+## 📂 Developer Examples
+
+Explore complete scripts in [`examples/`](examples/):
+- [`examples/quickstart.py`](examples/quickstart.py): Minimal 5-line image scanner.
+- [`examples/batch_pipeline.py`](examples/batch_pipeline.py): Batch directory processor with JSON manifest export.
+- [`examples/stream_webcam.py`](examples/stream_webcam.py): Real-time camera feed with interactive HUD.
 
 ---
 

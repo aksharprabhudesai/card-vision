@@ -1,0 +1,16 @@
+services:
+  card-vision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: card-vision-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "card-vision"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production-grade, privacy-first financial card detection, rectification, and attribute extraction engine."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -38,6 +38,11 @@ dev = [
     "ruff>=0.4.0",
     "mypy>=1.6.0",
     "ultralytics>=8.2.0",
+]
+server = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.22.0",
+    "python-multipart>=0.0.6",
 ]
 
 [project.urls]
@@ -80,8 +85,14 @@ module = [
     "cv2.*",
     "onnxruntime.*",
     "PIL.*",
+    "fastapi.*",
+    "uvicorn.*",
 ]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "card_vision.server"
+disallow_untyped_decorators = false
 
 [tool.pytest.ini_options]
 minversion = "7.0"
