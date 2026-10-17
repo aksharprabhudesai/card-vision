@@ -84,7 +84,8 @@ class OnnxTextRecognizer:
         gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY) if roi.ndim == 3 else roi
 
         # Check if ROI has virtually zero variance (e.g., blank or redacted image)
-        if float(np.std(gray)) < 2.0:
+        gray_arr = np.asarray(gray, dtype=np.float32)
+        if float(np.std(gray_arr)) < 2.0:
             return ""
 
         resized = cv2.resize(gray, (target_w, target_h), interpolation=cv2.INTER_CUBIC)
