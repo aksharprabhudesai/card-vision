@@ -115,11 +115,12 @@ class OnnxTextRecognizer:
 
         # Greedy CTC collapse (repeated consecutive tokens collapse; blank separates repeats)
         res = []
-        prev = -1
-        for idx in preds:
+        prev: int = -1
+        for raw_idx in preds:
+            idx = int(raw_idx)
             if idx != prev and idx < len(CHAR_MAP):
                 res.append(CHAR_MAP[idx])
-            prev = int(idx)
+            prev = idx
         text = "".join(res).strip()
         if whitelist:
             text = "".join(c for c in text if c in whitelist).strip()
